@@ -49,8 +49,8 @@ graph TD
 
 ### 1. Clone & Install
 ```bash
-git clone https://github.com/simonsl07/InsightLoop.git
-cd InsightLoop
+git clone https://github.com/simonsl07/GraphNews.git
+cd GraphNews
 pip install -r requirements.txt
 ```
 ### 2. Create a .env file following the .env.example file
