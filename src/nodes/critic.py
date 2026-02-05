@@ -45,9 +45,9 @@ def critic_node(state: AgentState):
         ])
 
         result = json.loads(response.content)
-        print(f"Critic scores {result["score"]}")
-        print(f"Critic gives feedback: {result["feedback"]}")
-        return {"final_score": result["score"], "critique": result["feedback"]}
+        print(f"Critic scores {result['score']}")
+        print(f"Critic gives feedback: {result['feedback']}")
+        return {"final_score": result['score'], "critique": result['feedback']}
     
     except Exception as e:
         print(f"Critic encounter error: {e}")
