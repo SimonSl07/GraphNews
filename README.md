@@ -1,7 +1,7 @@
 # GraphNews: A Multi-Agent Self-Correcting Editorial Team
 ![Python Version](https://img.shields.io/badge/python-3.11%2B-blue)
 ![LangGraph](https://img.shields.io/badge/Orchestration-LangGraph-orange)
-![LLM](https://img.shields.io/badge/LLM-DeepSeek--V3.2-green)
+![LLM](https://img.shields.io/badge/LLM-DeepSeek--V3-green)
 ![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)
 
 **GraphNews** is a sophisticated multi-agent system built with **LangGraph** that automates the end-to-end process of news research, curation, and newsletter drafting. Unlike standard linear AI chains, this project utilizes a **Cyclic Graph** architecture to implement a "Self-Correction" loop, ensuring high-quality, factual output through autonomous peer review.
@@ -9,7 +9,7 @@
 ## Workflow Architecture
 The system treats the editorial process as a state machine. Data flows through specialized nodes, maintaining a shared state to ensure context is preserved across the entire lifecycle:
 
-1.  **RESEARCHER:** Scours the web using **Tavily** for the top 10 .
+1.  **RESEARCHER:** Scours the web using **Tavily** for the top 10 news items for the specified topic.
 2.  **CURATOR:** Filters research results to select the top 5 most relevant sources.
 3.  **WRITER:** Generates a structured Markdown draft based on curated items.
 4.  **CRITIC:** Evaluates the draft. If the score is **< 8/10**, the draft is sent back to the **WRITER** with specific feedback for revision.
@@ -62,15 +62,24 @@ TAVILY_API_KEY=your_key_here
 
 ### 3. Run the system
 ```bash
+# Default run (yesterday's news)
 python main.py
+#Custom run with specific topic, destination and verbose logging
+python main.py --topic "Quantum Computing" --verbose --dest quantum_news.md
 ```
+## CLI Usage
+| Argument | Short | Description | Default |
+| :--- | :--- | :--- | :--- |
+| `--topic` | | The subject of the newsletter | Yesterday's News |
+| `--dest` | `-d` | Path to save the output file | `newsletter.md` |
+| `--verbose` | | Enable real-time agent logging | `False` |
 
 ## Technical Challenges & Solutions
 - The "Hallucination" Brake: Implemented a max revision counter within the Critic node logic to prevent infinite loops and runaway API costs.
 - Deterministic State Control: Used LangGraph's TypedDict state to maintain a single source of truth, preventing context drift.
 
 ## Roadmap
- - Add CLI arguments to control news topic and source count.
+ - Add argument to choose which LLM is used
  - Integrate LangSmith for full-trace agent debugging and cost monitoring.
  - Human-in-the-Loop: Add a LangGraph Checkpointer to pause for human approval before final output.
 
