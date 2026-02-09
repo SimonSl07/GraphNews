@@ -2,6 +2,7 @@
 ![Python Version](https://img.shields.io/badge/python-3.11%2B-blue)
 ![LangGraph](https://img.shields.io/badge/Orchestration-LangGraph-orange)
 ![LLM](https://img.shields.io/badge/LLM-DeepSeek--V3.2-green)
+![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)
 
 **GraphNews** is a sophisticated multi-agent system built with **LangGraph** that automates the end-to-end process of news research, curation, and newsletter drafting. Unlike standard linear AI chains, this project utilizes a **Cyclic Graph** architecture to implement a "Self-Correction" loop, ensuring high-quality, factual output through autonomous peer review.
 
