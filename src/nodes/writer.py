@@ -1,4 +1,5 @@
 import os
+import logging
 import json
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import SystemMessage, HumanMessage
@@ -7,6 +8,8 @@ from src.state import AgentState
 
 
 def writer_node(state: AgentState):
+    
+    logger = logging.getLogger(__name__)
 
     # Use DeepSeek to write newsletter based on curated answers
     deepseek = ChatOpenAI(
@@ -21,7 +24,7 @@ def writer_node(state: AgentState):
     critique = state.get('critique')
     existing_draft = state.get('draft')
     revision_number = state.get('revision_number', 0)
-    print(f"Writer is working on draft #{revision_number + 1}")
+    logger.info(f"Writer is working on draft #{revision_number + 1}")
 
     #writing for first time
     if not critique or not existing_draft:
@@ -68,7 +71,7 @@ def writer_node(state: AgentState):
             HumanMessage(user_message)
         ])
         
-        print(f"Writer finished draft #{revision_number + 1}")
+        logger.info(f"Writer finished draft #{revision_number + 1}")
 
         return {
             "draft": response.content,
@@ -76,7 +79,7 @@ def writer_node(state: AgentState):
         }
 
     except Exception as e:
-        print(f"Writer encountered error {e}")
+        logger.warning(f"Writer encountered error {e}")
         return {
             "draft": existing_draft if existing_draft else "error generating draft",
             "revision_number": revision_number + 1

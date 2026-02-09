@@ -1,11 +1,14 @@
 import os
+import logging
 from tavily import TavilyClient
 from src.state import AgentState
 
-
 def researcher_node(state: AgentState):
+
+    logger = logging.getLogger(__name__)
+    
     tavily = TavilyClient(api_key=os.environ["TAVILY_API_KEY"])
-    print(f"Research starts searching for {state['topic']}")
+    logger.info(f"Researcher starts searching for {state['topic']}")
     # try running tavily to research topic
     try:
         response = tavily.search(
@@ -14,7 +17,7 @@ def researcher_node(state: AgentState):
             max_results = 10
         )
     except Exception as e:
-        print(f"Error in Tavily Search: {e}")
+        logger.warning(f"Error in Tavily Search: {e}")
         return {"search_results": []}
     
     raw_results = response.get("results", [])
@@ -34,7 +37,7 @@ def researcher_node(state: AgentState):
             "score": result.get("score")
         })
     
-    print(f"Researcher found {len(final_results)} results")
+    logger.info(f"Researcher found {len(final_results)} results")
     #return unique answers
     return {"search_results": final_results}
 

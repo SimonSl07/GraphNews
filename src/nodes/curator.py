@@ -1,12 +1,14 @@
 import os
+import logging
 import json
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import SystemMessage, HumanMessage
 from src.state import AgentState
 
 
-
 def curator_node(state: AgentState):
+
+    logger = logging.getLogger(__name__)
 
     # Use DeepSeek to curate answers outputed by researcher and return best 5
     deepseek = ChatOpenAI(
@@ -21,7 +23,7 @@ def curator_node(state: AgentState):
 
     raw_results = state.get("search_results", [])
     topic = state.get("topic")
-    print(f"Curator analyzes {len(raw_results)} sources with DeepSeek")
+    logger.info(f"Curator analyzes {len(raw_results)} sources with DeepSeek")
 
     if len(raw_results) == 0:
         return {"curated_items": []}
@@ -63,10 +65,10 @@ def curator_node(state: AgentState):
         selected_ids = decision.get("selected_ids", [])
 
         curated_items = [raw_results[i] for i in selected_ids if i>=0 and i<len(raw_results)]
-        print(f"Curator selected {len(curated_items)} items")
+        logger.info(f"Curator selected {len(curated_items)} items")
         return {"curated_items": curated_items}
 
     except Exception as e:
-        print(f"Curator ran into error: {e} \n Taking first 5 results")
+        logger.warning(f"Curator ran into error: {e} \n Taking first 5 results")
         #take first 5 results if curator fails
         return {"curated_items": raw_results[:5]}

@@ -1,4 +1,5 @@
 import os
+import logging
 import json
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import SystemMessage, HumanMessage
@@ -6,6 +7,8 @@ from src.state import AgentState
 
 
 def critic_node(state: AgentState):
+
+    logger = logging.getLogger(__name__)
 
     # Use DeepSeek to critique answers
     deepseek = ChatOpenAI(
@@ -45,11 +48,11 @@ def critic_node(state: AgentState):
         ])
 
         result = json.loads(response.content)
-        print(f"Critic scores {result['score']}")
-        print(f"Critic gives feedback: {result['feedback']}")
+        logger.info(f"Critic scores {result['score']}")
+        logger.info(f"Critic gives feedback: {result['feedback']}")
         return {"final_score": result['score'], "critique": result['feedback']}
     
     except Exception as e:
-        print(f"Critic encounter error: {e}")
+        logger.warning(f"Critic encounter error: {e}")
         return {"final_score": 10, "critique": "Auto-approved due to critic error."}
     
